@@ -48,6 +48,8 @@ private slots:
     void on_singleshot_clicked();
     void on_continstart_clicked();
     void on_continend_clicked();
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // CAMERAWINDOW_H

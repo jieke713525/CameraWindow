@@ -96,8 +96,10 @@ void CameraWindow::on_open_clicked()
 
 void CameraWindow::on_close_clicked()
 {
-    videothread->end();
-    flag=0;
+    if(videothread!=nullptr){
+        videothread->end();
+        flag=0;
+    }
     camera->Close();
     camera->DestroyDevice();
     {
@@ -235,4 +237,12 @@ void CameraWindow::on_continend_clicked()
         ui->continstart->setEnabled(true);
         ui->continend->setEnabled(false);
     }
+}
+
+void CameraWindow::closeEvent(QCloseEvent *event)
+{
+    videothread->end();
+    camera->DestroyDevice();
+    camera->Close();
+    PylonTerminate();
 }
