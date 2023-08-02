@@ -7,12 +7,16 @@ CameraWindow::CameraWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initUI();
-    videothread=new VideoThread(camera);
-    connect(videothread,&VideoThread::sendImage,
-            this,[=](QImage image){
-        label->setPixmap(QPixmap::fromImage(image));
-        ui->pictureArea->setWidget(label);
-    });
+    /*
+     * 一个大坑,connect函数必须要在videothread创建后才能声明
+     * 初始状态下的videothread为null,声明了connect后就会一直和这个null绑定
+     * 导致图像出不来
+    */
+//    connect(videothread,&VideoThread::sendImage,
+//            this,[=](QImage image){
+//        label->setPixmap(QPixmap::fromImage(image));
+//        ui->pictureArea->setWidget(label);
+//    });
 }
 
 CameraWindow::~CameraWindow()
@@ -92,6 +96,8 @@ void CameraWindow::on_open_clicked()
 
 void CameraWindow::on_close_clicked()
 {
+    videothread->end();
+    flag=0;
     camera->Close();
     camera->DestroyDevice();
     {
@@ -181,12 +187,19 @@ void CameraWindow::on_singleshot_clicked()
 
 void CameraWindow::on_continstart_clicked()
 {
-    if(videothread->flag==0){
+    if(flag==0){
+        videothread=new VideoThread(camera);
+        connect(videothread,&VideoThread::sendImage,
+                this,[=](QImage image){
+            label->setPixmap(QPixmap::fromImage(image));
+            ui->pictureArea->setWidget(label);
+        });
+        flag=1;
         videothread->height=label->height();
         videothread->width=label->width();
         videothread->start();
     }
-    else if(videothread->flag==1){
+    else if(flag==1){
         videothread->resume();
     }
     {

@@ -29,7 +29,8 @@ private:
             new CBaslerUniversalInstantCamera();
     ImageUtil *imageutil=
             new ImageUtil();
-    VideoThread *videothread;
+    int flag=0;
+    VideoThread *videothread=nullptr;
     QLabel *label=new QLabel();
 public:
     void initUI();

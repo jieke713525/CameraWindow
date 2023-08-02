@@ -21,7 +21,6 @@ public:
 protected:
     void run();
 public:
-    int flag=0;
     int height,width;
     void pause();
     void resume();

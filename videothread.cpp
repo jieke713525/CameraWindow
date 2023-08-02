@@ -10,7 +10,6 @@ VideoThread::VideoThread(CBaslerUniversalInstantCamera *camera)
 }
 void VideoThread::run()
 {
-    flag=1;
     camera->StartGrabbing();
     CGrabResultPtr ptr;
     while(camera->IsGrabbing()){
@@ -41,7 +40,7 @@ void VideoThread::resume()
 void VideoThread::end()
 {
     camera->StopGrabbing();
-    flag=2;
-    QThread::quit();
+    this->exit();
 }
+
 
